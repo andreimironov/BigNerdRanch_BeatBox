@@ -1,7 +1,6 @@
 package com.andreimironov.beatbox;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class BeatBoxFragment extends Fragment {
-    private static final String TAG = "BeatBoxFragment";
     private BeatBox mBeatBox;
 
     @Nullable
@@ -47,7 +45,14 @@ public class BeatBoxFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         mBeatBox = new BeatBox(getActivity());
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mBeatBox.release();
     }
 
     private class SoundAdapter extends RecyclerView.Adapter<SoundHolder> {
@@ -60,7 +65,6 @@ public class BeatBoxFragment extends Fragment {
         @NonNull
         @Override
         public SoundHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            Log.d(TAG, "onCreateViewHolder");
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             ListItemSoundBinding binding = DataBindingUtil
                     .inflate(inflater, R.layout.list_item_sound, parent, false);
