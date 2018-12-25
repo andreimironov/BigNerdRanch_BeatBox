@@ -19,11 +19,17 @@ public class BeatBox {
     private AssetManager mAssetManager;
     private List<Sound> mSounds = new ArrayList<>();
     private SoundPool mSoundPool;
+    private float mRate;
+
+    public void setRate(float rate) {
+        mRate = rate;
+    }
 
     public BeatBox(Context context) {
         mAssetManager = context.getAssets();
         mSoundPool = new SoundPool(MAX_SOUNDS, AudioManager.STREAM_MUSIC, 0);
         loadSounds();
+        mRate = 1f;
     }
 
     private void load(Sound sound) throws IOException {
@@ -37,7 +43,7 @@ public class BeatBox {
         if (soundId == null) {
             return;
         }
-        mSoundPool.play(soundId, 1f, 1f, 1, 0, 1f);
+        mSoundPool.play(soundId, 1f, 1f, 1, 0, mRate);
     }
 
     private void loadSounds() {

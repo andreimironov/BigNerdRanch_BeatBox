@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 
 import com.andreimironov.beatbox.databinding.FragmentBeatBoxBinding;
 import com.andreimironov.beatbox.databinding.ListItemSoundBinding;
@@ -17,8 +18,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class BeatBoxFragment extends Fragment {
+public class BeatBoxFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
     private BeatBox mBeatBox;
+    private FragmentBeatBoxBinding mBinding;
 
     @Nullable
     @Override
@@ -27,15 +29,17 @@ public class BeatBoxFragment extends Fragment {
             @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState
     ) {
-        FragmentBeatBoxBinding binding = DataBindingUtil.inflate(
+        mBinding = DataBindingUtil.inflate(
                 inflater,
                 R.layout.fragment_beat_box,
                 container,
                 false
         );
-        binding.recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        binding.recyclerView.setAdapter(new SoundAdapter(mBeatBox.getSounds()));
-        return binding.getRoot();
+        mBinding.recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        mBinding.recyclerView.setAdapter(new SoundAdapter(mBeatBox.getSounds()));
+        mBinding.seekBar.setOnSeekBarChangeListener(this);
+        mBinding.seekBarLabel.setText(getString(R.string.seek_bar_title, mBinding.seekBar.getProgress()));
+        return mBinding.getRoot();
     }
 
     public static BeatBoxFragment newInstance() {
@@ -53,6 +57,22 @@ public class BeatBoxFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         mBeatBox.release();
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        mBeatBox.setRate(0.5f + 0.015f * progress);
+        mBinding.seekBarLabel.setText(getString(R.string.seek_bar_title, progress));
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
     }
 
     private class SoundAdapter extends RecyclerView.Adapter<SoundHolder> {
