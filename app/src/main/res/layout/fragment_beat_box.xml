@@ -33,7 +33,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:background="@color/colorWhite">
+            android:background="?attr/colorPrimary">
 
             <TextView
                 android:id="@+id/seek_bar_label"
